@@ -1,38 +1,17 @@
-import { welcomeScreens } from "@/src/constant/screen.constant";
-import { router } from "expo-router";
+import { SafeAreaLayout, WelcomeScreen } from "@/src/core-ui/core-ui-index";
 import React, { useRef, useState } from "react";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
 
 const Welcome = () => {
   const swiperRef = useRef<Swiper>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const { bottom, left, right, top } = useSafeAreaInsets();
   return (
-    <SafeAreaView className="flex items-center justify-between h-full bg-white">
-      <TouchableOpacity
-        onPress={() => router.replace("/(auth)/signup")}
-        className="flex items-end justify-end w-full p-5"
-      >
-        <Text className="text-base text-black font-JakartaBold">Skip</Text>
-      </TouchableOpacity>
-      <Swiper
-        ref={swiperRef}
-        loop={false}
-        dot={
-          <View className="w-[32px] h-[4px] mx-1 bg-[#E2E8F0] rounded-full" />
-        }
-        activeDot={
-          <View className="w-[32px] h-[4px] mx-1 bg-[#0286FF] rounded-full" />
-        }
-        onIndexChanged={(i) => setActiveIndex(i)}
-      >
-        {welcomeScreens.map(({ description, id, image, title }) => (
-          <View key={id}>
-            <Text>{title}</Text>
-          </View>
-        ))}
-      </Swiper>
-    </SafeAreaView>
+    <SafeAreaLayout
+      className={`flex items-center justify-between flex-1 h-full bg-white`}
+      child={<WelcomeScreen />}
+    />
   );
 };
 

@@ -3,7 +3,11 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@component/*": ["./src/component/*"],
+      "@constant/*": ["./src/constant/*"],
+      "@data/*": ["./src/data/*"],
+      "@helper/*": ["./src/helper/*"]
     }
   },
   "include": [
