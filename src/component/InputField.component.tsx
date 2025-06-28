@@ -4,6 +4,7 @@ import {
   ImageSourcePropType,
   Keyboard,
   KeyboardAvoidingView,
+  KeyboardTypeOptions,
   Platform,
   Text,
   TextInput,
@@ -24,6 +25,7 @@ interface InputFieldComponent {
   iconStyle?: string;
   className?: string;
   required?: boolean;
+  keyboardType?: KeyboardTypeOptions | undefined;
 }
 
 const InputFieldComponent = ({
@@ -39,6 +41,7 @@ const InputFieldComponent = ({
   inputStyle,
   secureTextEntry,
   required,
+  keyboardType,
   ...props
 }: InputFieldComponent) => {
   const [borderColor, setBorderColor] = useState("border-neutral-100");
@@ -65,6 +68,7 @@ const InputFieldComponent = ({
               secureTextEntry={secureTextEntry}
               onFocus={() => setBorderColor("border-primary-500")}
               onBlur={() => setBorderColor("border-neutral-100")}
+              keyboardType={keyboardType}
               {...props}
             />
           </View>
