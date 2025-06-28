@@ -1,12 +1,6 @@
+import { SignUpScreen } from "@/src/core-ui/core-ui-index";
 import React from "react";
-import { SafeAreaView, Text } from "react-native";
 
-const SignUp = () => {
-  return (
-    <SafeAreaView>
-      <Text>SignUp</Text>
-    </SafeAreaView>
-  );
-};
+const SignUp = () => <SignUpScreen />;
 
 export default SignUp;

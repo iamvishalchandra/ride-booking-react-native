@@ -8,10 +8,7 @@ const Welcome = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const { bottom, left, right, top } = useSafeAreaInsets();
   return (
-    <SafeAreaLayout
-      className={`flex items-center justify-between flex-1 h-full bg-white`}
-      child={<WelcomeScreen />}
-    />
+    <SafeAreaLayout className={`flex-1 bg-white`} child={<WelcomeScreen />} />
   );
 };
 

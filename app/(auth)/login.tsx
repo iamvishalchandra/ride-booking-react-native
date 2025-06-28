@@ -1,12 +1,6 @@
+import LoginScreen from "@/src/core-ui/auth-screen/login-screen/LoginScreen";
 import React from "react";
-import { SafeAreaView, Text } from "react-native";
 
-const Login = () => {
-  return (
-    <SafeAreaView>
-      <Text>Login</Text>
-    </SafeAreaView>
-  );
-};
+const Login = () => <LoginScreen />;
 
 export default Login;

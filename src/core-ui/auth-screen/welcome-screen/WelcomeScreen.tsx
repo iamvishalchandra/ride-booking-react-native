@@ -1,14 +1,16 @@
-import ButtonComponent from "@/src/component/Button.component";
+import { ButtonComponent } from "@/src/component/index.component";
 import welcomeScreenData from "@/src/data/welcomeScreen.data";
 import { router } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
 
 const WelcomeScreen = () => {
   const swiperRef = useRef<Swiper>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const isLastSlide = activeIndex === welcomeScreenData.length - 1;
+  const { bottom, left, right, top } = useSafeAreaInsets();
   return (
     <>
       <TouchableOpacity
@@ -49,6 +51,11 @@ const WelcomeScreen = () => {
       <ButtonComponent
         title={isLastSlide ? "Get Started" : "Next"}
         className="w-11/12 mt-10"
+        onPress={() =>
+          isLastSlide
+            ? router.replace("/(auth)/signup")
+            : swiperRef?.current?.scrollBy(1)
+        }
       />
     </>
   );
