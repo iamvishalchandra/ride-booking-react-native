@@ -11,12 +11,25 @@ const ButtonComponent = ({
   className,
   bgVariant = "primary",
   textVariant = "default",
+  hideButtonShadow,
   ...props
 }: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`p-3 rounded-full flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 ${getBGVariantStyle(bgVariant)} ${className}`}
+      className={`p-3 rounded-full flex flex-row justify-center items-center ${getBGVariantStyle(bgVariant)} ${className}`}
+      style={
+        !hideButtonShadow && {
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 3,
+          },
+          shadowOpacity: 0.27,
+          shadowRadius: 4.65,
+          elevation: 6,
+        }
+      }
       {...props}
     >
       {IconLeft && <IconLeft />}

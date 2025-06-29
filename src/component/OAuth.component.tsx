@@ -15,6 +15,7 @@ const OAuthComponent = () => {
       <ButtonComponent
         title="Login With Google"
         className="w-full mt-5 shadow-none"
+        hideButtonShadow
         IconLeft={() => (
           <Image
             source={icons.google}

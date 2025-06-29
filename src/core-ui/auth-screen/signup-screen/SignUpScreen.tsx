@@ -5,9 +5,11 @@ import { icons } from "@/src/constant/icons.constant";
 import { images } from "@/src/constant/image.constant";
 import { ClerkOAuthVerification } from "@/types/enum.d";
 import { useSignUp } from "@clerk/clerk-expo";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Image, Modal, ScrollView, Text, View } from "react-native";
+import { Alert, Image, ScrollView, Text, View } from "react-native";
+import SuccessSignupModal from "./modal/SuccessSignup.modal";
+import VerifySignupModal from "./modal/VerifySignup.modal";
 
 const SignUpScreen = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -18,9 +20,10 @@ const SignUpScreen = () => {
   });
 
   const { isLoaded, signUp, setActive } = useSignUp();
-  const router = useRouter();
 
   const onSignUp = async () => {
+    console.log(`isLoaded`, isLoaded);
+
     if (!isLoaded) return;
 
     try {
@@ -35,7 +38,12 @@ const SignUpScreen = () => {
         status: ClerkOAuthVerification.PENDING,
       });
     } catch (err: any) {
-      Alert.alert("Error", err?.errors?.[0]?.longMessage || "SignUp Failed...");
+      Alert.alert(
+        "Error",
+        err?.errors?.[0]?.longMessage ||
+          err?.errors?.[0]?.message ||
+          "SignUp Failed..."
+      );
     }
   };
 
@@ -48,6 +56,7 @@ const SignUpScreen = () => {
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
         code: verification.code,
       });
+      console.log(signUpAttempt.status);
 
       // If verification was completed, set the session to active
       // and redirect the user
@@ -69,15 +78,13 @@ const SignUpScreen = () => {
       );
       updateVerificationState({
         status: ClerkOAuthVerification.FAILED,
-        error: err?.errors?.[0]?.longMessage || "'Verification Failed...",
+        error:
+          err?.errors?.[0]?.longMessage ||
+          err?.errors?.[0]?.message ||
+          "'Verification Failed...",
       });
     }
   };
-
-  const isVerificationSuccess =
-    verification.status === ClerkOAuthVerification.SUCCESS;
-  const isVerificationPending =
-    verification.status === ClerkOAuthVerification.PENDING;
 
   const updateVerificationState = ({
     status,
@@ -88,17 +95,25 @@ const SignUpScreen = () => {
     code?: string;
     error?: string;
   }) => {
-    let newValues = verification;
+    let newValues: {
+      status: ClerkOAuthVerification;
+      code: string;
+      error: string;
+    } = verification;
     if (status) newValues.status = status;
     if (code) newValues.code = code;
     if (error) newValues.error = error;
 
-    setverification(newValues);
+    setverification({ ...verification, ...newValues });
   };
+
+  const showTransparentOverlay =
+    verification.status === ClerkOAuthVerification.PENDING ||
+    verification.status === ClerkOAuthVerification.SUCCESS;
 
   return (
     <ScrollView
-      className={`flex-1 ${isVerificationSuccess || isVerificationPending ? "bg-[#000000c7]" : "bg-white"}`}
+      className={`flex-1 ${showTransparentOverlay ? "bg-[#000000c7]" : "bg-white"}`}
     >
       <View className="flex-1 bg-white">
         <View className="relative w-full h-[250px]">
@@ -111,6 +126,7 @@ const SignUpScreen = () => {
           <InputFieldComponent
             label="Name"
             placeHolder="Enter Your Name"
+            textContentType="name"
             icon={icons.person}
             value={form.name}
             onChange={(value: string) => setForm({ ...form, name: value })}
@@ -119,14 +135,16 @@ const SignUpScreen = () => {
           <InputFieldComponent
             label="Email"
             placeHolder="Enter Your Email"
+            textContentType="emailAddress"
             icon={icons.email}
-            value={form.email}
+            value={form.email.toLowerCase()}
             onChange={(value: string) => setForm({ ...form, email: value })}
             required
           />
           <InputFieldComponent
             label="Password"
             placeHolder="Enter Your Password"
+            textContentType="password"
             icon={icons.lock}
             value={form.password}
             onChange={(value: string) => setForm({ ...form, password: value })}
@@ -148,76 +166,26 @@ const SignUpScreen = () => {
             <Text className="text-primary-500">Login</Text>
           </Link>
         </View>
-        {/* {Verificationb Modal} */}
-        {isVerificationSuccess ||
-          (isVerificationPending && (
-            <View className="absolute top-0 bottom-0 left-0 right-0 z-10 w-full h-full bg-[#000000c7]" />
-          ))}
-        <Modal
-          visible={isVerificationPending}
-          transparent={true}
-          onRequestClose={() =>
-            updateVerificationState({
-              status: ClerkOAuthVerification.SUCCESS,
-            })
+        {showTransparentOverlay && (
+          <View className="absolute top-0 bottom-0 left-0 right-0 z-10 w-full h-full bg-[#000000c7]" />
+        )}
+
+        {/* {Verification Modal} */}
+        <VerifySignupModal
+          email={form.email}
+          error={verification?.error}
+          inputCode={verification.code}
+          onChangeCode={(code: string) =>
+            updateVerificationState({ code, error: "" })
           }
-        >
-          <View className="flex items-center justify-center h-full px-7">
-            <View className="bg-white rounded-2xl w-full min-h-[300px] mb-10 flex flex-col justify-center items-center">
-              {/* <Image
-                source={images.check}
-                className="w-[110px] h-[110px] mx-auto my-5"
-              /> */}
-              <View className="w-full px-8">
-                <Text className="w-full mb-2 text-2xl font-JakartaExtraBold">
-                  Verification
-                </Text>
-                <Text className="mb-5 font-Jakarta">
-                  We've sent a verification code to {form.email}
-                </Text>
-                <InputFieldComponent
-                  label="Code"
-                  icon={icons.lock}
-                  placeHolder="eg - 12345"
-                  value={verification.code}
-                  keyboardType="numeric"
-                  onChange={(code: string) => updateVerificationState({ code })}
-                />
-                {verification?.error && (
-                  <Text className="mt-1 text-sm text-red-500">
-                    {verification?.error}
-                  </Text>
-                )}
-              </View>
-              <ButtonComponent
-                title="Verify Email"
-                onPress={onVerifyPress}
-                className="w-11/12 mt-5 bg-success-500"
-              />
-            </View>
-          </View>
-        </Modal>
-        <Modal visible={isVerificationSuccess} transparent={true}>
-          <View className="flex items-center justify-center h-full px-7">
-            <View className="bg-white py-9 rounded-2xl w-full min-h-[300px] mb-10 flex flex-col justify-center items-center">
-              <Image
-                source={images.check}
-                className="w-[110px] h-[110px] mx-auto my-5"
-              />
-              <Text className="text-3xl text-center font-JakartaBold">
-                Verified
-              </Text>
-              <Text className="text-base text-center text-gray-400 font-Jakarta">
-                Your account has been verified successfully.
-              </Text>
-              <ButtonComponent
-                title="Browse Home"
-                onPress={() => router.replace("/(root)/(tabs)/home")}
-                className="w-11/12 mt-5"
-              />
-            </View>
-          </View>
-        </Modal>
+          onConfirm={onVerifyPress}
+          show={verification.status === ClerkOAuthVerification.PENDING}
+        />
+
+        {/* {Succes Modal} */}
+        <SuccessSignupModal
+          show={verification.status === ClerkOAuthVerification.SUCCESS}
+        />
       </View>
     </ScrollView>
   );

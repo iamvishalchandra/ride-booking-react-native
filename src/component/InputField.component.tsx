@@ -5,9 +5,11 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   KeyboardTypeOptions,
+  NativeSyntheticEvent,
   Platform,
   Text,
   TextInput,
+  TextInputChangeEventData,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -17,7 +19,7 @@ interface InputFieldComponent {
   labeStyle?: string;
   placeHolder?: string;
   icon?: ImageSourcePropType;
-  value: string | number | undefined;
+  value: string | undefined;
   onChange: any;
   secureTextEntry?: boolean;
   containerStyle?: string;
@@ -26,6 +28,53 @@ interface InputFieldComponent {
   className?: string;
   required?: boolean;
   keyboardType?: KeyboardTypeOptions | undefined;
+  textContentType?:
+    | "none"
+    | "URL"
+    | "addressCity"
+    | "addressCityAndState"
+    | "addressState"
+    | "countryName"
+    | "creditCardNumber"
+    | "creditCardExpiration"
+    | "creditCardExpirationMonth"
+    | "creditCardExpirationYear"
+    | "creditCardSecurityCode"
+    | "creditCardType"
+    | "creditCardName"
+    | "creditCardGivenName"
+    | "creditCardMiddleName"
+    | "creditCardFamilyName"
+    | "familyName"
+    | "emailAddress"
+    | "fullStreetAddress"
+    | "givenName"
+    | "jobTitle"
+    | "location"
+    | "middleName"
+    | "name"
+    | "namePrefix"
+    | "nameSuffix"
+    | "nickname"
+    | "organizationName"
+    | "postalCode"
+    | "streetAddressLine1"
+    | "streetAddressLine2"
+    | "sublocality"
+    | "telephoneNumber"
+    | "username"
+    | "password"
+    | "newPassword"
+    | "oneTimeCode"
+    | "birthdate"
+    | "birthdateDay"
+    | "birthdateMonth"
+    | "birthdateYear"
+    | "cellularEID"
+    | "cellularIMEI"
+    | "dateTime"
+    | "flightNumber"
+    | "shipmentTrackingNumber";
 }
 
 const InputFieldComponent = ({
@@ -42,9 +91,16 @@ const InputFieldComponent = ({
   secureTextEntry,
   required,
   keyboardType,
+  textContentType,
   ...props
 }: InputFieldComponent) => {
   const [borderColor, setBorderColor] = useState("border-neutral-100");
+
+  const onChangeValue = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+    e.persist();
+    return onChange(e?.nativeEvent?.text);
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -69,6 +125,8 @@ const InputFieldComponent = ({
               onFocus={() => setBorderColor("border-primary-500")}
               onBlur={() => setBorderColor("border-neutral-100")}
               keyboardType={keyboardType}
+              onChange={onChangeValue}
+              textContentType={textContentType}
               {...props}
             />
           </View>
