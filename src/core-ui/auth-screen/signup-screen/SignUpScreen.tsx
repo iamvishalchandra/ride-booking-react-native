@@ -3,6 +3,7 @@ import InputFieldComponent from "@/src/component/InputField.component";
 import OAuthComponent from "@/src/component/OAuth.component";
 import { icons } from "@/src/constant/icons.constant";
 import { images } from "@/src/constant/image.constant";
+import { fetchAPI } from "@/src/lib/fetch.lib";
 import { ClerkOAuthVerification } from "@/types/enum.d";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
@@ -22,8 +23,6 @@ const SignUpScreen = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
 
   const onSignUp = async () => {
-    console.log(`isLoaded`, isLoaded);
-
     if (!isLoaded) return;
 
     try {
@@ -56,11 +55,18 @@ const SignUpScreen = () => {
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
         code: verification.code,
       });
-      console.log(signUpAttempt.status);
 
       // If verification was completed, set the session to active
       // and redirect the user
       if (signUpAttempt.status === ClerkOAuthVerification.COMPLETE) {
+        await fetchAPI("/(api)/user", {
+          method: "POST",
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            clerkId: signUpAttempt.createdUserId,
+          }),
+        });
         await setActive({ session: signUpAttempt.createdSessionId });
         updateVerificationState({
           status: ClerkOAuthVerification.SUCCESS,
