@@ -7,7 +7,8 @@
       "@component/*": ["./src/component/*"],
       "@constant/*": ["./src/constant/*"],
       "@data/*": ["./src/data/*"],
-      "@helper/*": ["./src/helper/*"]
+      "@helper/*": ["./src/helper/*"],
+      "@store/*": ["./src/store*"]
     }
   },
   "include": [

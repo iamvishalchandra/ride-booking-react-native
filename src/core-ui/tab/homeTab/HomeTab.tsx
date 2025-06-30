@@ -5,7 +5,7 @@ import {
 import { icons } from "@/src/constant/icons.constant";
 import { images } from "@/src/constant/image.constant";
 import { recentRides } from "@/src/data/mock.data";
-import { useUser } from "@clerk/clerk-expo";
+import { UserResource } from "@clerk/types";
 import React from "react";
 import {
   ActivityIndicator,
@@ -17,8 +17,11 @@ import {
 } from "react-native";
 import RideCardHomeTab from "./RideCardHomeTab";
 
-const HomeTab = () => {
-  const { user } = useUser();
+interface IHomeTab {
+  user: UserResource | null | undefined;
+}
+
+const HomeTab = ({ user }: IHomeTab) => {
   const loading = true;
 
   const handleLogout = async () => {};
@@ -69,16 +72,29 @@ const HomeTab = () => {
             </View>
             <GoogleTextInputComponent
               icon={icons.search}
-              containerStyle="bg-white shadow-md shadow-neutral-300"
+              containerClassName="bg-white shadow-md shadow-neutral-300"
+              containerStyle={{
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 3,
+                },
+                shadowOpacity: 0.27,
+                shadowRadius: 4.65,
+                elevation: 6,
+              }}
               handlePress={handleDestinationPress}
             />
 
             <>
               <Text>Your Current Location</Text>
-              <View className="flex flex-row items-center bg-transparent h-[300px]">
+              <View className="flex flex-row items-center  h-[300px] bg-transparent">
                 <MapComponent />
               </View>
             </>
+            <Text className="mt-5 mb-3 text-xl font-JakartaBold">
+              Recent Rides
+            </Text>
           </>
         )}
       />

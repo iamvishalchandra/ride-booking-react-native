@@ -13,7 +13,7 @@ const WelcomeScreen = () => {
   return (
     <>
       <TouchableOpacity
-        onPress={() => router.replace("/(auth)/signup")}
+        onPress={() => router.replace("/(auth)/login")}
         className="flex items-end justify-end w-full p-5"
       >
         <Text className="text-base text-black font-JakartaBold">Skip</Text>
@@ -52,7 +52,7 @@ const WelcomeScreen = () => {
         className="w-11/12 mt-10"
         onPress={() =>
           isLastSlide
-            ? router.replace("/(auth)/signup")
+            ? router.replace("/(auth)/login")
             : swiperRef?.current?.scrollBy(1)
         }
       />
