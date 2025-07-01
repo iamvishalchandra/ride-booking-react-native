@@ -16,10 +16,10 @@ declare interface Driver {
 }
 
 declare interface MarkerData {
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   id: number;
-  title: string;
+  title?: string;
   profile_image_url: string;
   car_image_url: string;
   car_seats: number;
@@ -70,20 +70,22 @@ declare interface ButtonProps extends TouchableOpacityProps {
 
 declare interface GoogleInputProps {
   icon?: string;
-  initialLocation?: string;
+  initialLocation?: string | null;
   containerStyle?: StyleProp<ViewStyle>;
   containerClassName?: string;
   textInputBackgroundColor?: string;
-  handlePress: ({
-    latitude,
-    longitude,
-    address,
-  }: {
-    latitude: number;
-    longitude: number;
-    address: string;
-  }) => void;
+  handlePress: GoogleInputPropsHandlePress;
 }
+
+declare type GoogleInputPropsHandlePress = ({
+  latitude,
+  longitude,
+  address,
+}: {
+  latitude: number;
+  longitude: number;
+  address: string;
+}) => void;
 
 declare interface InputFieldProps extends TextInputProps {
   label: string;

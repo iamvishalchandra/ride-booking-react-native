@@ -19,13 +19,19 @@ import RideCardHomeTab from "./RideCardHomeTab";
 
 interface IHomeTab {
   user: UserResource | null | undefined;
+  handleDestinationPress: ({
+    latitude,
+    longitude,
+    address,
+  }: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => void;
 }
 
-const HomeTab = ({ user }: IHomeTab) => {
+const HomeTab = ({ user, handleDestinationPress }: IHomeTab) => {
   const loading = true;
-
-  const handleLogout = async () => {};
-  const handleDestinationPress = async () => {};
 
   return (
     <>
@@ -64,7 +70,7 @@ const HomeTab = ({ user }: IHomeTab) => {
                 👋
               </Text>
               <TouchableOpacity
-                onPress={handleLogout}
+                // onPress={handleLogout}
                 className="items-center justify-center w-10 h-10 bg-white rounded-full"
               >
                 <Image className="w-4 h-4 ml-5" source={icons.out} />

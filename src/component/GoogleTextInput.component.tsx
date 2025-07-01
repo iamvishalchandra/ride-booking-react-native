@@ -16,9 +16,10 @@ const GoogleTextInputComponent = ({
   return (
     <View
       style={containerStyle}
-      className={`flex items-center justify-center flex-row relative z-50 rounded-lg ${containerClassName} mb-5`}
+      className={`flex flex-row justify-center items-center relative z-50 rounded-lg ${containerClassName} mb-5`}
     >
       <GooglePlacesAutocomplete
+        keyboardShouldPersistTaps="always"
         fetchDetails={true}
         placeholder="Where to?"
         debounce={200}
@@ -33,7 +34,7 @@ const GoogleTextInputComponent = ({
           },
           textInput: {
             backgroundColor: textInputBackgroundColor || "white",
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: 600,
             marginTop: 5,
             width: "100%",
@@ -46,7 +47,7 @@ const GoogleTextInputComponent = ({
             width: "100%",
             borderRadius: 10,
             shadowColor: "#d4d4d4",
-            zIndex: 1000,
+            zIndex: 99,
           },
         }}
         onPress={(data, details = null) => {
@@ -56,7 +57,10 @@ const GoogleTextInputComponent = ({
             address: data?.description,
           });
         }}
-        query={{ key: process.env.EXPO_PUBLIC_GOOGLE_API_KEY, language: "en" }}
+        query={{
+          key: process.env.EXPO_PUBLIC_GOOGLE_API_KEY,
+          language: "en",
+        }}
         renderLeftButton={() => (
           <View className="items-center justify-center w-6 h-6">
             <Image
@@ -70,55 +74,9 @@ const GoogleTextInputComponent = ({
           placeholderTextColor: "gray",
           placeholder: initialLocation ?? "Where Do you want to go?",
         }}
-        predefinedPlaces={[
-          {
-            description: "Home",
-            geometry: {
-              location: {
-                lat: 37.78825,
-                lng: -122.4324,
-                latitude: 37.78825,
-                longitude: -122.4324,
-              },
-            },
-          },
-          {
-            description: "Office",
-            geometry: {
-              location: {
-                lat: 37.78825,
-                lng: -122.4324,
-                latitude: 37.78825,
-                longitude: -122.4324,
-              },
-            },
-          },
-          {
-            description: "School",
-            geometry: {
-              location: {
-                lat: 37.78825,
-                lng: -122.4324,
-                latitude: 37.78825,
-                longitude: -122.4324,
-              },
-            },
-          },
-          {
-            description: "Park",
-            geometry: {
-              location: {
-                lat: 37.78825,
-                lng: -122.4324,
-                latitude: 37.78825,
-                longitude: -122.4324,
-              },
-            },
-          },
-        ]}
-        onFail={() => {
-          console.log(`Error`);
-        }}
+        predefinedPlaces={[]}
+        timeout={20000}
+        minLength={3}
       />
     </View>
   );

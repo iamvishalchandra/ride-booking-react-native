@@ -9,7 +9,7 @@ import { useDriverStore, useLocationStore } from "../store/index.store";
 
 const MapComponent = () => {
   const [markers, setMarkers] = useState<MarkerData[]>([]);
-
+  const drivers: MarkerData[] = mockDrivers;
   const {
     destinationLatitude,
     destinationLongitude,
@@ -27,10 +27,11 @@ const MapComponent = () => {
   });
 
   useEffect(() => {
+    setDrivers(drivers);
     if (Array.isArray(mockDrivers)) {
       if (!userLatitude || !userLongitude) return;
       const newMarkers = generateMarkersFromData({
-        data: mockDrivers,
+        data: drivers,
         userLatitude,
         userLongitude,
       });
@@ -53,8 +54,8 @@ const MapComponent = () => {
         <MapMarker
           key={id}
           coordinate={{
-            latitude: latitude,
-            longitude: longitude,
+            latitude: latitude!,
+            longitude: longitude!,
           }}
           title={title}
           image={selectedDriver === id ? icons.selectedMarker : icons.marker}

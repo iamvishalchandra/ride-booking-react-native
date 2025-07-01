@@ -2,6 +2,7 @@ import { HomeTab, SafeAreaLayout } from "@/src/core-ui/core-ui-index";
 import { useLocationStore } from "@/src/store/index.store";
 import { useUser } from "@clerk/clerk-expo";
 import * as Location from "expo-location";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 const HomeScreen = () => {
@@ -10,6 +11,18 @@ const HomeScreen = () => {
     useLocationStore && useLocationStore((state) => state);
 
   const [hasPermission, setHasPermission] = useState(false);
+
+  const handleLogout = async () => {};
+
+  const handleDestinationPress = (location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) => {
+    setDestinationLocation(location);
+    router.push("/(root)/find-ride");
+  };
+
   useEffect(() => {
     requestLocaion();
   }, []);
@@ -39,7 +52,9 @@ const HomeScreen = () => {
   return (
     <SafeAreaLayout
       className={`flex-1 bg-general-500`}
-      child={<HomeTab user={user} />}
+      child={
+        <HomeTab user={user} handleDestinationPress={handleDestinationPress} />
+      }
     />
   );
 };
