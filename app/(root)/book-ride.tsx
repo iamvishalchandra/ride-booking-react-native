@@ -1,6 +1,7 @@
 import { BookRideScreen, RideLayout } from "@/src/core-ui/core-ui-index";
 import { useDriverStore, useLocationStore } from "@/src/store/index.store";
 import { useUser } from "@clerk/clerk-expo";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 const BookRide = () => {
   const { user } = useUser();
@@ -12,17 +13,23 @@ const BookRide = () => {
   )[0];
 
   return (
-    <RideLayout
-      title="Book Ride"
-      child={
-        <BookRideScreen
-          user={user}
-          userAddress={userAddress}
-          destinationAddress={destinationAddress}
-          driverDetails={driverDetails}
-        />
-      }
-    />
+    <StripeProvider
+      publishableKey={process.env.EXPO_PUBLIC_STRIPE_API_KEY}
+      merchantIdentifier="merchat.ride-booking.com"
+      urlScheme="ridebooking"
+    >
+      <RideLayout
+        title="Book Ride"
+        child={
+          <BookRideScreen
+            user={user}
+            userAddress={userAddress}
+            destinationAddress={destinationAddress}
+            driverDetails={driverDetails}
+          />
+        }
+      />
+    </StripeProvider>
   );
 };
 

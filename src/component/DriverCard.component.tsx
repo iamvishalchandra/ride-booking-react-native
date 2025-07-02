@@ -36,7 +36,7 @@ const DriverCardComponent = ({
             |
           </Text>
           <Text className="text-sm font-JakartaRegular text-general-800">
-            {formatTime(item.time!)}
+            {formatTime(parseInt(item.time?.toString()!))}
           </Text>
           <Text className="mx-1 text-sm font-JakartaRegular text-general-800">
             |

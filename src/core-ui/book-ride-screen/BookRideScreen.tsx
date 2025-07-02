@@ -52,7 +52,7 @@ const BookRideScreen = ({
 
       <RideInfoBookRideScreen
         price={driverDetails?.price!}
-        time={formatTime(driverDetails?.time || 5)}
+        time={formatTime(parseInt(driverDetails?.time?.toString()!))}
         seats={driverDetails?.car_seats}
       />
 
@@ -71,7 +71,13 @@ const BookRideScreen = ({
           </Text>
         </View>
       </View>
-      <PaymentComponent />
+      <PaymentComponent
+        fullName={user?.fullName!}
+        email={user?.emailAddresses[0].emailAddress!}
+        amount={driverDetails?.price!}
+        driverId={driverDetails?.id!}
+        rideTime={driverDetails?.time!}
+      />
     </>
   );
 };

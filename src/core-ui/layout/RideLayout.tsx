@@ -50,7 +50,6 @@ const RideLayout = ({
           index={0}
         >
           <BottomSheetView style={{ flex: 1, padding: 20 }}>
-            {/* <BottomSheetTextInput /> */}
             {child}
           </BottomSheetView>
         </BottomSheet>
