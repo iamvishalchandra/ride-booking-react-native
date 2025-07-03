@@ -1,3 +1,4 @@
+import { googleOAuth } from "./auth";
 import { fetchAPI, useFetch } from "./fetch.lib";
 
-export { fetchAPI, useFetch };
+export { fetchAPI, googleOAuth, useFetch };

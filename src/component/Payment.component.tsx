@@ -31,9 +31,14 @@ const PaymentComponent = ({
     destinationLatitude,
     destinationAddress,
   } = useLocationStore();
+
+  const payableAmount = parseInt(amount) * 85 * 100;
+
   const { userId } = useAuth();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [checkoutReady, setCheckoutReady] = useState(false);
+  const [disablePaymentButton, setDisablePaymentButton] = useState(true);
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
@@ -47,7 +52,7 @@ const PaymentComponent = ({
         name: fullName || email.split("@")[0],
         email,
         rideTime,
-        amount,
+        amount: payableAmount,
         driverId,
       }),
     });
@@ -61,54 +66,55 @@ const PaymentComponent = ({
   };
 
   const initializePaymentSheet = async () => {
-    const { paymentIntent, ephemeralKey, customer } =
-      await fetchPaymentSheetParams();
-
-    const { error } = await initPaymentSheet({
-      merchantDisplayName: "Ride Booking.",
-      returnURL: "ridebooking://book-ride",
-      customerId: customer,
-      customerEphemeralKeySecret: ephemeralKey.secret,
-      paymentIntentClientSecret: paymentIntent.client_secret,
-      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-      //methods that complete payment after a delay, like SEPA Debit and Sofort.
-      allowsDelayedPaymentMethods: true,
-    });
-    if (!error) {
-      setLoading(true);
-    }
+    await fetchPaymentSheetParams()
+      .then(async ({ customer, ephemeralKey, paymentIntent }) => {
+        setDisablePaymentButton(false);
+        await initPaymentSheet({
+          merchantDisplayName: "Ride Booking.",
+          returnURL: "ridebooking://book-ride",
+          customerId: customer,
+          customerEphemeralKeySecret: ephemeralKey.secret,
+          paymentIntentClientSecret: paymentIntent.client_secret,
+          allowsDelayedPaymentMethods: true,
+        })
+          .then(() => setLoading(true))
+          .catch((err) => console.log(`Init Payment Sheet Error: `, err));
+      })
+      .catch((err) => console.log(`Fetch Payment Sheet Error: `, err));
   };
 
   const openPaymentSheet = async () => {
     const { error } = await presentPaymentSheet();
 
     if (error) {
-      console.log(error);
-
       return Alert.alert(`Error code: ${error.code}`, error.message);
     }
 
     setSuccess(true);
 
-    await fetchAPI("/(api)/(ride)/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        origin_address: userAddress,
-        destination_address: destinationAddress,
-        origin_latitude: userLatitude,
-        origin_longitude: userLongitude,
-        destination_latitude: destinationLatitude,
-        destination_longitude: destinationLongitude,
-        ride_time: rideTime.toFixed(0),
-        fare_price: parseInt(amount) * 100,
-        payment_status: "paid",
-        driver_id: driverId,
-        user_id: userId,
-      }),
-    });
+    try {
+      await fetchAPI("/(api)/ride/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          origin_address: userAddress,
+          destination_address: destinationAddress,
+          origin_latitude: userLatitude,
+          origin_longitude: userLongitude,
+          destination_latitude: destinationLatitude,
+          destination_longitude: destinationLongitude,
+          ride_time: rideTime.toFixed(0),
+          fare_price: payableAmount,
+          payment_status: "paid",
+          driver_id: driverId,
+          user_id: userId,
+        }),
+      });
+    } catch (error) {
+      console.log(`Create Ride Error: `, error);
+    }
   };
 
   useEffect(() => {
@@ -124,6 +130,7 @@ const PaymentComponent = ({
         title="Confirm Ride"
         className="my-10"
         onPress={openPaymentSheet}
+        disabled={disablePaymentButton}
       />
       {success && (
         <View className="relative">

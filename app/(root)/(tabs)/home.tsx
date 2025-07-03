@@ -1,18 +1,25 @@
 import { HomeTab, SafeAreaLayout } from "@/src/core-ui/core-ui-index";
+import { useFetch } from "@/src/lib/fetch.lib";
 import { useLocationStore } from "@/src/store/index.store";
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import * as Location from "expo-location";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 const HomeScreen = () => {
   const { user } = useUser();
+  const { signOut } = useAuth();
   const { setUserLocation, setDestinationLocation } =
     useLocationStore && useLocationStore((state) => state);
 
+  const { data: recentRides, loading } = useFetch(`/(api)/ride/${user?.id}`);
+
   const [hasPermission, setHasPermission] = useState(false);
 
-  const handleLogout = async () => {};
+  const handleLogout = () => {
+    signOut();
+    router.replace("/(auth)/login");
+  };
 
   const handleDestinationPress = (location: {
     latitude: number;
@@ -37,8 +44,6 @@ const HomeScreen = () => {
         longitude: location?.coords?.longitude,
       });
 
-      // latitude: location?.coords?.latitude,
-      // longitude: location?.coords?.longitude,
       setUserLocation({
         latitude: 37.78825,
         longitude: -122.4324,
@@ -53,7 +58,13 @@ const HomeScreen = () => {
     <SafeAreaLayout
       className={`flex-1 bg-general-500`}
       child={
-        <HomeTab user={user} handleDestinationPress={handleDestinationPress} />
+        <HomeTab
+          user={user}
+          handleDestinationPress={handleDestinationPress}
+          recentRides={recentRides}
+          loading={loading}
+          handleLogout={handleLogout}
+        />
       }
     />
   );

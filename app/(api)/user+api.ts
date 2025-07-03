@@ -1,8 +1,7 @@
-import { neon } from "@neondatabase/serverless";
+import { createUser } from "@/src/database/user/create.user";
 
 export const POST = async (req: Request) => {
   try {
-    const sql = neon(process.env.EXPO_PUBLIC_DATABASE_URI);
     const { name, email, clerkId } = await req.json();
 
     if (!name || !email || !clerkId)
@@ -10,8 +9,7 @@ export const POST = async (req: Request) => {
         { error: "Missing required field" },
         { status: 400 }
       );
-    const data =
-      await sql`INSERT INTO users (name,email,clerk_id) VALUES (${name},${email},${clerkId})`;
+    const data = await createUser({ name, email, clerkId });
 
     return new Response(JSON.stringify({ data }), { status: 201 });
   } catch (error) {

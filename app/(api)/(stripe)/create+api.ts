@@ -28,7 +28,7 @@ export const POST = async (req: Request) => {
     );
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: parseInt(amount) * 85 * 100,
+      amount,
       currency: "inr",
       customer: customer?.id,
       setup_future_usage: "off_session",

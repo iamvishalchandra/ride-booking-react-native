@@ -4,7 +4,6 @@ import {
 } from "@/src/component/index.component";
 import { icons } from "@/src/constant/icons.constant";
 import { images } from "@/src/constant/image.constant";
-import { recentRides } from "@/src/data/mock.data";
 import { UserResource } from "@clerk/types";
 import React from "react";
 import {
@@ -28,11 +27,18 @@ interface IHomeTab {
     longitude: number;
     address: string;
   }) => void;
+  loading: boolean;
+  recentRides: any;
+  handleLogout: () => void;
 }
 
-const HomeTab = ({ user, handleDestinationPress }: IHomeTab) => {
-  const loading = true;
-
+const HomeTab = ({
+  user,
+  handleDestinationPress,
+  loading,
+  recentRides,
+  handleLogout,
+}: IHomeTab) => {
   return (
     <>
       <FlatList
@@ -70,7 +76,7 @@ const HomeTab = ({ user, handleDestinationPress }: IHomeTab) => {
                 👋
               </Text>
               <TouchableOpacity
-                // onPress={handleLogout}
+                onPress={handleLogout}
                 className="items-center justify-center w-10 h-10 bg-white rounded-full"
               >
                 <Image className="w-4 h-4 ml-5" source={icons.out} />
