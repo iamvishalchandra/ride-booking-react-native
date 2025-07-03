@@ -1,11 +1,15 @@
+import { ProfileTab, SafeAreaLayout } from "@/src/core-ui/core-ui-index";
+import { useUser } from "@clerk/clerk-expo";
 import React from "react";
-import { Text, View } from "react-native";
 
 const Profile = () => {
+  const { user } = useUser();
+
   return (
-    <View>
-      <Text>Profile</Text>
-    </View>
+    <SafeAreaLayout
+      className={`flex-1 bg-general-500`}
+      child={<ProfileTab user={user} />}
+    />
   );
 };
 

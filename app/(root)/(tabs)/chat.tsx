@@ -1,11 +1,14 @@
+import { ChatTab, SafeAreaLayout } from "@/src/core-ui/core-ui-index";
+import { useUser } from "@clerk/clerk-expo";
 import React from "react";
-import { Text, View } from "react-native";
 
 const Chat = () => {
+  const { user } = useUser();
   return (
-    <View>
-      <Text>Chat</Text>
-    </View>
+    <SafeAreaLayout
+      className={`flex-1 bg-general-500`}
+      child={<ChatTab user={user} />}
+    />
   );
 };
 

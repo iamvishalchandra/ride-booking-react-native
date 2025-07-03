@@ -1,6 +1,7 @@
 import { HomeTab, SafeAreaLayout } from "@/src/core-ui/core-ui-index";
 import { useFetch } from "@/src/lib/fetch.lib";
 import { useLocationStore } from "@/src/store/index.store";
+import { Ride } from "@/types/type";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import * as Location from "expo-location";
 import { router } from "expo-router";
@@ -12,7 +13,9 @@ const HomeScreen = () => {
   const { setUserLocation, setDestinationLocation } =
     useLocationStore && useLocationStore((state) => state);
 
-  const { data: recentRides, loading } = useFetch(`/(api)/ride/${user?.id}`);
+  const { data: recentRides, loading } = useFetch<Ride[]>(
+    `/(api)/ride/${user?.id}`
+  );
 
   const [hasPermission, setHasPermission] = useState(false);
 

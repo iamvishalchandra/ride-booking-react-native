@@ -5,7 +5,6 @@ export const GET = async () => {
     const data = await db`SELECT * FROM drivers`;
     return Response.json({ data });
   } catch (error) {
-    console.log(error);
     return Response.json({ error }, { status: 500 });
   }
 };

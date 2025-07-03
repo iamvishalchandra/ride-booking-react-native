@@ -76,6 +76,7 @@ const PaymentComponent = ({
           customerEphemeralKeySecret: ephemeralKey.secret,
           paymentIntentClientSecret: paymentIntent.client_secret,
           allowsDelayedPaymentMethods: true,
+          primaryButtonLabel: `Pay $${amount}`,
         })
           .then(() => setLoading(true))
           .catch((err) => console.log(`Init Payment Sheet Error: `, err));

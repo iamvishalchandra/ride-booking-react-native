@@ -13,14 +13,16 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { icons } from "../constant/icons.constant";
 
 interface InputFieldComponent {
   label: string;
   labeStyle?: string;
   placeHolder?: string;
   icon?: ImageSourcePropType;
+  showEditIcon?: boolean;
   value: string | undefined;
-  onChange: any;
+  onChange?: any;
   secureTextEntry?: boolean;
   containerStyle?: string;
   inputStyle?: string;
@@ -75,6 +77,7 @@ interface InputFieldComponent {
     | "dateTime"
     | "flightNumber"
     | "shipmentTrackingNumber";
+  editable?: boolean;
 }
 
 const InputFieldComponent = ({
@@ -92,7 +95,8 @@ const InputFieldComponent = ({
   required,
   keyboardType,
   textContentType,
-  ...props
+  editable,
+  showEditIcon,
 }: InputFieldComponent) => {
   const [borderColor, setBorderColor] = useState("border-neutral-100");
 
@@ -127,8 +131,16 @@ const InputFieldComponent = ({
               keyboardType={keyboardType}
               onChange={onChangeValue}
               textContentType={textContentType}
-              {...props}
+              value={value}
+              editable={editable}
             />
+
+            {showEditIcon && (
+              <Image
+                source={icons.edit}
+                className={`w-6 h-6 mr-6 ${iconStyle}`}
+              />
+            )}
           </View>
         </View>
       </TouchableWithoutFeedback>

@@ -4,9 +4,6 @@ export const googleOAuth = async (startSSOFlow: any) => {
   try {
     const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
       strategy: "oauth_google",
-      // For web, defaults to current path
-      // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
-      // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
       redirectUrl: Linking.createURL("/(root)/(tabs)/home"),
     });
 

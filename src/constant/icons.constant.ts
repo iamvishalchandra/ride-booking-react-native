@@ -1,3 +1,4 @@
+import edit from "@/assets/icons/Edit.png";
 import arrowDown from "@/assets/icons/arrow-down.png";
 import arrowUp from "@/assets/icons/arrow-up.png";
 import backArrow from "@/assets/icons/back-arrow.png";
@@ -7,6 +8,7 @@ import close from "@/assets/icons/close.png";
 import dollar from "@/assets/icons/dollar.png";
 import email from "@/assets/icons/email.png";
 import eyecross from "@/assets/icons/eyecross.png";
+import galleryEdit from "@/assets/icons/galleryEdit.png";
 import google from "@/assets/icons/google.png";
 import home from "@/assets/icons/home.png";
 import list from "@/assets/icons/list.png";
@@ -50,4 +52,6 @@ export const icons = {
   star,
   target,
   to,
+  galleryEdit,
+  edit,
 };

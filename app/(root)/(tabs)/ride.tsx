@@ -1,12 +1,23 @@
+import { RideTab, SafeAreaLayout } from "@/src/core-ui/core-ui-index";
+import { useFetch } from "@/src/lib/fetch.lib";
+import { Ride } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
 import React from "react";
-import { Text, View } from "react-native";
 
-const Ride = () => {
+const Rides = () => {
+  const { user } = useUser();
+  const { data: recentRides, loading } = useFetch<Ride[]>(
+    `/(api)/ride/${user?.id}`
+  );
+
   return (
-    <View>
-      <Text>Ride</Text>
-    </View>
+    <SafeAreaLayout
+      className={`flex-1 bg-general-500`}
+      child={
+        <RideTab recentRides={recentRides} user={user} loading={loading} />
+      }
+    />
   );
 };
 
-export default Ride;
+export default Rides;

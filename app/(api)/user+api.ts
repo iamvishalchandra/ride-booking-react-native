@@ -13,7 +13,6 @@ export const POST = async (req: Request) => {
 
     return new Response(JSON.stringify({ data }), { status: 201 });
   } catch (error) {
-    console.log(error);
     return Response.json({ error }, { status: 500 });
   }
 };
