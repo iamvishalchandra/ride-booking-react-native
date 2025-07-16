@@ -4,7 +4,7 @@ import { formatTime } from "@/src/helper/date.helper";
 import { MarkerData } from "@/types/type";
 import { UserResource } from "@clerk/types";
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Platform, Text, View } from "react-native";
 import RideInfoBookRideScreen from "./RideInfoBookRideScreen";
 
 interface IBookRideScreen {
@@ -71,13 +71,15 @@ const BookRideScreen = ({
           </Text>
         </View>
       </View>
-      <PaymentComponent
-        fullName={user?.fullName!}
-        email={user?.emailAddresses[0].emailAddress!}
-        amount={driverDetails?.price!}
-        driverId={driverDetails?.id!}
-        rideTime={driverDetails?.time!}
-      />
+      {Platform.OS !== "web" && (
+        <PaymentComponent
+          fullName={user?.fullName!}
+          email={user?.emailAddresses[0].emailAddress!}
+          amount={driverDetails?.price!}
+          driverId={driverDetails?.id!}
+          rideTime={driverDetails?.time!}
+        />
+      )}
     </>
   );
 };
