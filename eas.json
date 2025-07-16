@@ -5,7 +5,12 @@
     "requireCommit": true
   },
   "build": {
-    "apk-dev": { "android": { "buildType": "apk" } },
+    "apk-dev": {
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"
