@@ -13,7 +13,8 @@
       "bundleIdentifier": "com.vishalchandra.dev.ridebooking",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "platforms": ["android", "ios"]
     },
     "android": {
       "permissions": ["ACCESS_BACKGROUND_LOCATION"],
