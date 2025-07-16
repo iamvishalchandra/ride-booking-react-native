@@ -1,11 +1,9 @@
 import { BookRideScreen, RideLayout } from "@/src/core-ui/core-ui-index";
 import { useDriverStore, useLocationStore } from "@/src/store/index.store";
 import { useUser } from "@clerk/clerk-expo";
-import { Platform } from "react-native";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 const BookRide = () => {
-  if (Platform.OS === "web") return;
-  const { StripeProvider } = require("@stripe/stripe-react-native");
   const { user } = useUser();
   const { userAddress, destinationAddress } = useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();

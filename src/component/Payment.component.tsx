@@ -1,12 +1,12 @@
 import { PaymentProps } from "@/types/type";
 import { useAuth } from "@clerk/clerk-expo";
+import { useStripe } from "@stripe/stripe-react-native";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
   Image,
   Modal,
-  Platform,
   Text,
   View,
   useWindowDimensions,
@@ -23,8 +23,6 @@ const PaymentComponent = ({
   fullName,
   rideTime,
 }: PaymentProps) => {
-  if (Platform.OS === "web") return;
-  const { useStripe } = require("@stripe/stripe-react-native");
   const {
     userAddress,
     userLongitude,
@@ -39,6 +37,7 @@ const PaymentComponent = ({
   const { userId } = useAuth();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [checkoutReady, setCheckoutReady] = useState(false);
   const [disablePaymentButton, setDisablePaymentButton] = useState(true);
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
@@ -80,7 +79,7 @@ const PaymentComponent = ({
           primaryButtonLabel: `Pay $${amount}`,
         })
           .then(() => setLoading(true))
-          .catch((err: any) => console.log(`Init Payment Sheet Error: `, err));
+          .catch((err) => console.log(`Init Payment Sheet Error: `, err));
       })
       .catch((err) => console.log(`Fetch Payment Sheet Error: `, err));
   };
