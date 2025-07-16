@@ -8,13 +8,13 @@
     "scheme": "ridebooking",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "platforms": ["android", "ios"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.vishalchandra.dev.ridebooking",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      },
-      "platforms": ["android", "ios"]
+      }
     },
     "android": {
       "permissions": ["ACCESS_BACKGROUND_LOCATION"],
